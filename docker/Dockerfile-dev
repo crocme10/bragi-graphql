@@ -1,7 +1,7 @@
 FROM rust:1.46-buster as builder
 
-RUN USER=root cargo new --lib bragi-status
-WORKDIR ./bragi-status
+RUN USER=root cargo new --lib bragi-graphql
+WORKDIR ./bragi-graphql
 COPY ./Cargo.toml ./Cargo.toml
 RUN apt-get update \
     && apt-get install -y ca-certificates tzdata \
@@ -14,7 +14,7 @@ RUN rm src/*.rs
 
 ADD . ./
 
-RUN rm ./target/release/deps/bragi_status*
+RUN rm ./target/release/deps/bragi_graphql*
 RUN cargo build --release
 
 FROM debian:buster-slim
@@ -32,9 +32,9 @@ RUN groupadd $APP_USER \
     && useradd -g $APP_USER $APP_USER \
     && mkdir -p ${APP}
 
-COPY --from=builder /bragi-status/target/release/service ${APP}/service
-COPY --from=builder /bragi-status/config ${APP}/config
-COPY --from=builder /bragi-status/docker/entrypoint.sh ${APP}/entrypoint.sh
+COPY --from=builder /bragi-graphql/target/release/service ${APP}/service
+COPY --from=builder /bragi-graphql/config ${APP}/config
+COPY --from=builder /bragi-graphql/docker/entrypoint.sh ${APP}/entrypoint.sh
 
 RUN chown -R $APP_USER:$APP_USER ${APP}
 
