@@ -1,0 +1,37 @@
+[package]
+name = "bragi-graphql"
+version = "0.1.0"
+authors = ["crocme10 <matt@area403.org>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1.36"
+chrono = { version = "0.4", features = [ "serde" ] }
+clap = "2.33.1"
+config = "0.10"
+futures = { version = "0.3" }
+jq-rs = "0.4.1"
+juniper = { git="https://github.com/graphql-rust/juniper.git", features = ["chrono"] }
+juniper_graphql_ws = { git="https://github.com/graphql-rust/juniper.git" }
+juniper_warp = { git="https://github.com/graphql-rust/juniper.git", features = ["subscriptions"] }
+reqwest = { version = "0.10.8", features = [ "json" ] }
+serde = { version = "1.0", features = [ "derive" ] }
+serde_json = "1.0"
+slog = "2.5"
+slog-term = "2.5"
+slog-async = "2.5"
+snafu = { version = "0.6", features = [ "futures" ] }
+tokio = { version = "0.2.22", features = [ "sync", "rt-core", "macros", "stream", "process" ] }
+url = "2.1"
+urlencoding = "1.0"
+warp = { version = "0.2.4" }
+
+[lib]
+name = "bragi_graphql"
+path = "src/lib.rs"
+
+[[bin]]
+name = "service"
+path = "src/main.rs"
