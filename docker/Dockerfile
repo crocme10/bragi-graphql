@@ -18,27 +18,28 @@ RUN rm ./target/release/deps/bragi_graphql*
 RUN cargo build --release
 
 FROM debian:buster-slim
-ARG APP=/usr/src/app
 
 RUN apt-get update \
+    && apt-get install -y netcat \
     && apt-get install -y ca-certificates tzdata \
     && rm -rf /var/lib/apt/lists/*
 
 ENV TZ=Etc/UTC \
-    RUN_MODE=development \
-    APP_USER=appuser
+    APP_USER=appuser \
+    SETTINGS=development
 
 RUN groupadd $APP_USER \
     && useradd -g $APP_USER $APP_USER \
-    && mkdir -p ${APP}
+    && mkdir -p /opt/bragi-graphql \
+    && mkdir -p /etc/opt/bragi-graphql
 
-COPY --from=builder /bragi-graphql/target/release/service ${APP}/service
-COPY --from=builder /bragi-graphql/config ${APP}/config
-COPY --from=builder /bragi-graphql/docker/entrypoint.sh ${APP}/entrypoint.sh
+COPY --from=builder /bragi-graphql/target/release/service /opt/bragi-graphql/service
+COPY --from=builder /bragi-graphql/config /etc/opt/bragi-graphql
+COPY --from=builder /bragi-graphql/docker/entrypoint.sh /opt/bragi-graphql/entrypoint.sh
 
-RUN chown -R $APP_USER:$APP_USER ${APP}
+RUN chown -R $APP_USER:$APP_USER /opt/bragi-graphql
 
 USER $APP_USER
-WORKDIR ${APP}
+WORKDIR /opt/bragi-graphql
 
 CMD ["./entrypoint.sh"]

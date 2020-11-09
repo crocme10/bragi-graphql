@@ -12,9 +12,23 @@ async fn main() -> Result<(), error::Error> {
         .author("Matthieu Paindavoine")
         .subcommand(
             SubCommand::with_name("run")
-                .about("Publish users service")
+                .about("Publish GraphQL API for Bragi")
                 .version("0.1")
                 .author("Matthieu Paindavoine <matt@area403.org>")
+                .arg(
+                    Arg::with_name("config")
+                        .value_name("DIRECTORY")
+                        .short("c")
+                        .long("config")
+                        .help("Config directory"),
+                )
+                .arg(
+                    Arg::with_name("settings")
+                        .value_name("NAME")
+                        .short("s")
+                        .long("settings")
+                        .help("Settings used"),
+                )
                 .arg(
                     Arg::with_name("address")
                         .value_name("HOST")
